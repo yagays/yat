@@ -41,3 +41,20 @@ class Tokenizer():
 
     def sequences_to_texts(self, sequences):
         return ["".join(self.sequence_to_text(sequence)) for sequence in sequences]
+
+    def save_as_text(self, filename):
+        with open(filename, "w") as f:
+            for w, w_id in self.token2id.items():
+                f.write("\t".join([str(w_id), w]) + "\n")
+
+    def load_from_text(self, filename):
+        with open(filename) as f:
+            for line in f:
+                l = line.strip().split("\t")
+                w_id = int(l[0])
+                w = l[1]
+
+                self.token2id[w] = w_id
+                self.id2token[w_id] = w
+                self.num_id += 1
+                self.set_token.add(w)
