@@ -47,7 +47,7 @@ tokenizer.fit_on_texts(texts)
 sequence = tokenizer.texts_to_sequences(texts)
 
 maxlen = 20
-X_train = preprocessing.sequence.pad_sequences(sequence, maxlen=20)
+X_train = preprocessing.sequence.pad_sequences(sequence, maxlen=maxlen)
 ```
 
 ```py
