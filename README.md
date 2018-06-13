@@ -16,7 +16,7 @@ In []: sequence
 Out[]: ['犬', 'を', '飼っ', 'て', 'い', 'ます']
 ```
 
-### 単語からIDに変換
+### 文章からIDに変換
 
 ```py
 import yat
@@ -25,12 +25,18 @@ tokenizer = yat.Tokenizer()
 
 text = ["犬を飼っています", "猫を飼っています"]
 tokenizer.fit_on_texts(text)
-sequence = tokenizer.texts_to_sequences(text)
 ```
 
 ```py
-In []: sequence
+In []: tokenizer.texts_to_sequences(text)
 Out[]: [[0, 1, 2, 3, 4, 5], [6, 1, 2, 3, 4, 5]]
+```
+
+### IDから文章に変換
+
+```py
+In []: tokenizer.sequences_to_texts([[0, 1, 2, 3, 4, 5], [6, 1, 2, 3, 4, 5]])
+Out[]: ['犬を飼っています', '猫を飼っています']
 ```
 
 ### Kerasとの連携
