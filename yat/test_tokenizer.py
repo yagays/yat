@@ -20,6 +20,9 @@ def test_tokenizer():
     assert tokenizer.num_id == 8
     assert tokenizer.text_to_sequence("狼を飼っています") == [7, 1, 2, 3, 4, 5]
 
+    tokenizer.fit_on_texts(["狐を飼っています", "狸を飼っています"])
+    assert tokenizer.num_id == 10
+    assert tokenizer.texts_to_sequences(["狐を飼っています", "狸を飼っています"]) == [[8, 1, 2, 3, 4, 5], [9, 1, 2, 3, 4, 5]]
 
 if __name__ == "__main__":
     pytest.main([__file__])

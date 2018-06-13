@@ -27,7 +27,8 @@ class Tokenizer():
                 self.set_token.add(w)
 
     def fit_on_texts(self, texts):
-        [self.fit_on_text(sentence) for sentence in texts]
+        for sentence in texts:
+            self.fit_on_text(sentence)
 
     def text_to_sequence(self, text):
         return [self.token2id[w] for w in self.tokenize(text)]
