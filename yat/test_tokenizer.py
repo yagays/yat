@@ -24,6 +24,15 @@ def test_tokenizer():
     assert tokenizer.word_index == 10
     assert tokenizer.texts_to_sequences(["狐を飼っています", "狸を飼っています"]) == [[9, 2, 3, 4, 5, 6], [10, 2, 3, 4, 5, 6]]
 
+    # for padding
+    assert tokenizer.sequence_to_text([0, 0, -1, 2, 3, 4, 5, 6]) == "UNKを飼っています"
+
+
+def test_tokenizer_blank():
+    tokenizer = Tokenizer()
+    tokenizer.fit_on_texts(["", "", ""])
+    assert len(tokenizer.set_token) == 1
+
 
 if __name__ == "__main__":
     pytest.main([__file__])

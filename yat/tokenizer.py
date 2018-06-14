@@ -12,6 +12,11 @@ class Tokenizer():
         self.set_token = set()
         self.word_index = 0
 
+        w_blank = self.node("", "")
+        self.token2id[w_blank] = self.word_index
+        self.id2token[self.word_index] = w_blank
+        self.set_token.add(w_blank)
+
         self._mecab = MeCab.Tagger(mecab_param)
         self._mecab.parse("")
 
