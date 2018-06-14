@@ -29,9 +29,10 @@ class Tokenizer():
 
         for w in words:
             if w not in self.set_token:
+                self.num_id += 1
+
                 self.token2id[w] = self.num_id
                 self.id2token[self.num_id] = w
-                self.num_id += 1
                 self.set_token.add(w)
 
     def fit_on_texts(self, texts):
