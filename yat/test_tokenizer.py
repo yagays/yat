@@ -7,7 +7,7 @@ def test_tokenizer():
     tokenizer = Tokenizer()
     tokenizer.fit_on_texts(text)
 
-    assert tokenizer.num_id == 7
+    assert tokenizer.word_index == 7
     assert tokenizer.texts_to_sequences(text) == [[1, 2, 3, 4, 5, 6], [7, 2, 3, 4, 5, 6]]
     assert tokenizer.sequences_to_texts([[1, 2, 3, 4, 5, 6], [7, 2, 3, 4, 5, 6]]) == text
 
@@ -17,11 +17,11 @@ def test_tokenizer():
 
     # fit additional word "狼"
     tokenizer.fit_on_text("狼を飼っています")
-    assert tokenizer.num_id == 8
+    assert tokenizer.word_index == 8
     assert tokenizer.text_to_sequence("狼を飼っています") == [8, 2, 3, 4, 5, 6]
 
     tokenizer.fit_on_texts(["狐を飼っています", "狸を飼っています"])
-    assert tokenizer.num_id == 10
+    assert tokenizer.word_index == 10
     assert tokenizer.texts_to_sequences(["狐を飼っています", "狸を飼っています"]) == [[9, 2, 3, 4, 5, 6], [10, 2, 3, 4, 5, 6]]
 
 

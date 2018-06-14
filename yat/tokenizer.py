@@ -10,7 +10,7 @@ class Tokenizer():
         self.token2id = defaultdict(lambda: -1)
         self.id2token = defaultdict(lambda: self.node("UNK", "未知語"))
         self.set_token = set()
-        self.num_id = 0
+        self.word_index = 0
 
         self._mecab = MeCab.Tagger()
         self._mecab.parse("")
@@ -29,10 +29,10 @@ class Tokenizer():
 
         for w in words:
             if w not in self.set_token:
-                self.num_id += 1
+                self.word_index += 1
 
-                self.token2id[w] = self.num_id
-                self.id2token[self.num_id] = w
+                self.token2id[w] = self.word_index
+                self.id2token[self.word_index] = w
                 self.set_token.add(w)
 
     def fit_on_texts(self, texts):
@@ -65,5 +65,5 @@ class Tokenizer():
 
                 self.token2id[w] = w_id
                 self.id2token[w_id] = w
-                self.num_id += 1
+                self.word_index += 1
                 self.set_token.add(w)
