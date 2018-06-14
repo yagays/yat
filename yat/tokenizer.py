@@ -10,7 +10,10 @@ class Tokenizer():
         self.token2id = defaultdict(lambda: -1)
         self.id2token = defaultdict(lambda: self.node("UNK", "未知語"))
         self.set_token = set()
+        self.word_counts = defaultdict(lambda: 0)
         self.word_index = 0
+
+        self.filtering = defaultdict(set)
 
         w_blank = self.node("", "")
         self.token2id[w_blank] = self.word_index
@@ -33,6 +36,8 @@ class Tokenizer():
         words = self.tokenize(text)
 
         for w in words:
+            self.word_counts[w] += 1
+
             if w not in self.set_token:
                 self.word_index += 1
 
@@ -45,7 +50,11 @@ class Tokenizer():
             self.fit_on_text(sentence)
 
     def text_to_sequence(self, text):
-        return [self.token2id[w] for w in self.tokenize(text)]
+        res = []
+        for w in self.tokenize(text):
+            if self.filter_text(w):
+                res.append(self.token2id[w])
+        return res
 
     def texts_to_sequences(self, texts):
         return [self.text_to_sequence(text) for text in texts]
@@ -56,9 +65,30 @@ class Tokenizer():
     def sequences_to_texts(self, sequences):
         return ["".join(self.sequence_to_text(sequence)) for sequence in sequences]
 
-    def save_as_text(self, filename):
+    def filter_text(self, node):
+        ret = True
+        if "vocabulary_size" in self.filtering and node not in self.filtering["vocabulary_size"]:
+            ret = False
+
+        if "pos" in self.filtering and node.feature not in self.filtering["pos"]:
+            ret = False
+
+        return ret
+
+    def filter_by_vocabulary_size(self, n):
+        top_n_counts = sorted(self.word_counts.items(), key=lambda x: x[1], reverse=True)[:n]
+        self.filtering["vocabulary_size"] = set(s[0] for s in top_n_counts)
+
+    def filter_by_pos(self, pos_list):
+        if pos_list:
+            self.filtering["pos"] = set(pos_list)
+
+    def save_as_text(self, filename, filter=False):
         with open(filename, "w") as f:
             for w, w_id in self.token2id.items():
+                if filter and not self.filter_text(w):
+                    continue
+
                 f.write("\t".join([str(w_id), w.surface, w.feature]) + "\n")
 
     def load_from_text(self, filename):

@@ -34,5 +34,47 @@ def test_tokenizer_blank():
     assert len(tokenizer.set_token) == 1
 
 
+def test_tokenizer_filtering_vocabulary_size():
+    text = "すもももももももものうち"
+    tokenizer = Tokenizer()
+    tokenizer.fit_on_text(text)
+
+    # before filtering
+    assert len(tokenizer.set_token) == 6
+    assert len(tokenizer.filtering["vocabulary_size"]) == 0
+
+    # after filtering
+    tokenizer.filter_by_vocabulary_size(2)
+    assert len(tokenizer.filtering["vocabulary_size"]) == 2
+    assert tokenizer.text_to_sequence(text) == [2, 3, 2, 3]  # すもも も もも も もも の うち
+    assert tokenizer.sequence_to_text([2, 3, 2, 3]) == "もももももも"
+
+
+def test_tokenizer_filtering_vocabulary_size():
+    text = "すもももももももものうち"
+    tokenizer = Tokenizer()
+    tokenizer.fit_on_text(text)
+
+    # すもももももももものうち
+    # すもも  名詞,一般,*,*,*,*,すもも,スモモ,スモモ
+    # も      助詞,係助詞,*,*,*,*,も,モ,モ
+    # もも    名詞,一般,*,*,*,*,もも,モモ,モモ
+    # も      助詞,係助詞,*,*,*,*,も,モ,モ
+    # もも    名詞,一般,*,*,*,*,もも,モモ,モモ
+    # の      助詞,連体化,*,*,*,*,の,ノ,ノ
+    # うち    名詞,非自立,副詞可能,*,*,*,うち,ウチ,ウチ
+
+    tokenizer.filter_by_pos(["名詞"])
+    assert len(tokenizer.filtering["pos"]) == 1
+    assert tokenizer.text_to_sequence(text) == [1, 3, 3, 5]
+    assert tokenizer.sequence_to_text([1, 3, 3, 5]) == "すももももももうち"
+    assert tokenizer.sequence_to_text([1, 2, 3, 2, 3, 4, 5]) == text
+
+    tokenizer.filter_by_pos(["名詞", "助詞"])
+    assert len(tokenizer.filtering["pos"]) == 2
+    assert tokenizer.text_to_sequence(text) == [1, 2, 3, 2, 3, 4, 5]
+    assert tokenizer.sequence_to_text([1, 2, 3, 2, 3, 4, 5]) == text
+
+
 if __name__ == "__main__":
     pytest.main([__file__])
