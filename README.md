@@ -1,5 +1,11 @@
 # yat: Yet Another Tokenizer for Japanese NLP
 
+## インストール
+
+```sh
+$ pip install git+https://github.com/yagays/yat
+```
+
 ## 使い方
 
 ### MeCabを使った分かち書き
