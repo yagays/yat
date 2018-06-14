@@ -42,8 +42,8 @@ model.fit(X_train, y_train, batch_size=1, epochs=1, shuffle=True)
 
 # test
 sequence_test = tokenizer.texts_to_sequences(["メロスは、村の牧人である。"])
-# [[31, 1, 34, -1, 38, -1, 3, 4, 5]]
+# [[33, 2, 36, -1, 40, -1, 4, 5, 6]]
 X_test = preprocessing.sequence.pad_sequences(sequence_test, maxlen=maxlen)
-# array([[ 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 31,  1, 34, -1, 38, -1,  3,  4,  5]], dtype=int32)
+# array([[ 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 33,  2, 36, -1, 40, -1,  4,  5,  6]], dtype=int32)
 model.predict(X_test)
-# array([[0.9999999]], dtype=float32)
+# array([[0.94371426]], dtype=float32)
