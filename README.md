@@ -72,17 +72,17 @@ tokenizer.save_as_text("yat_tokenizer.txt")
 
 ```sh
 $ head yat_tokenizer.txt
-0       吾輩
-1       は
-2       猫
-3       で
-4       ある
+1       吾輩    名詞
+2       は      助詞
+3       猫      名詞
+4       で      助動詞
+5       ある    助動詞
 ```
 
 ### Tokenizerの読み込み
 
 ```py
-tokenizer = Tokenizer()
+tokenizer = yat.Tokenizer()
 tokenizer.load_from_text("yat_tokenizer.txt")
 ```
 
@@ -90,10 +90,10 @@ tokenizer.load_from_text("yat_tokenizer.txt")
 In []: tokenizer.token2id
 Out[]:
 defaultdict(<function yat.tokenizer.Tokenizer.__init__.<locals>.<lambda>()>,
-            {'吾輩': 0,
-             'は': 1,
-             '猫': 2,
-             'で': 3,
-             'ある': 4,
+            {Node(surface='吾輩', feature='名詞'): 1,
+             Node(surface='は', feature='助詞'): 2,
+             Node(surface='猫', feature='名詞'): 3,
+             Node(surface='で', feature='助動詞'): 4,
+             Node(surface='ある', feature='助動詞'): 5,
 [...]
 ```
