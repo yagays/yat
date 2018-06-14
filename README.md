@@ -97,3 +97,9 @@ defaultdict(<function yat.tokenizer.Tokenizer.__init__.<locals>.<lambda>()>,
              Node(surface='ある', feature='助動詞'): 5,
 [...]
 ```
+
+### Neologdを利用する
+
+```py
+tokenizer = Tokenizer("-d /path/to/mecab-ipadic-neologd")
+```

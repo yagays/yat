@@ -5,14 +5,14 @@ import MeCab
 
 
 class Tokenizer():
-    def __init__(self):
+    def __init__(self, mecab_param=""):
         self.node = namedtuple("Node", ("surface", "feature"))
         self.token2id = defaultdict(lambda: -1)
         self.id2token = defaultdict(lambda: self.node("UNK", "未知語"))
         self.set_token = set()
         self.word_index = 0
 
-        self._mecab = MeCab.Tagger()
+        self._mecab = MeCab.Tagger(mecab_param)
         self._mecab.parse("")
 
     def tokenize(self, text):
