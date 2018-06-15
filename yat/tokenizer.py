@@ -86,6 +86,8 @@ class Tokenizer():
     def save_as_text(self, filename, filter=False):
         with open(filename, "w") as f:
             for w, w_id in self.token2id.items():
+                if w_id == 0:
+                    continue
                 if filter and not self.filter_text(w):
                     continue
 

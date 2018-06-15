@@ -1,3 +1,5 @@
+import os
+
 import pytest
 from yat import Tokenizer
 
@@ -74,6 +76,34 @@ def test_tokenizer_filtering_vocabulary_size():
     assert len(tokenizer.filtering["pos"]) == 2
     assert tokenizer.text_to_sequence(text) == [1, 2, 3, 2, 3, 4, 5]
     assert tokenizer.sequence_to_text([1, 2, 3, 2, 3, 4, 5]) == text
+
+
+def test_tokenizer_io():
+    text = ["犬を飼っています", "猫を飼っています"]
+    tokenizer = Tokenizer()
+    tokenizer.fit_on_texts(text)
+
+    # prepare
+    tmp_dir = ".pytest_cache/"
+    if not os.path.exists(tmp_dir):
+        os.mkdir(tmp_dir)
+    output_file = os.path.join(tmp_dir, "test_tokenizer.txt")
+    assert tokenizer.text_to_sequence("猫を飼っています") == [7, 2, 3, 4, 5, 6]
+    assert tokenizer.sequence_to_text([7, 2, 3, 4, 5, 6]) == "猫を飼っています"
+
+    # save
+    tokenizer.save_as_text(output_file)
+    with open(output_file) as f:
+        num_lines = len(f.readlines())
+    assert num_lines == 7
+
+    # load
+    tokenizer_load = Tokenizer()
+    tokenizer_load.load_from_text(output_file)
+    assert tokenizer.token2id == tokenizer_load.token2id
+    # same as above
+    assert tokenizer_load.text_to_sequence("猫を飼っています") == [7, 2, 3, 4, 5, 6]
+    assert tokenizer_load.sequence_to_text([7, 2, 3, 4, 5, 6]) == "猫を飼っています"
 
 
 if __name__ == "__main__":
