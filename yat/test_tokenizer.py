@@ -112,6 +112,33 @@ def test_tokenizer_io():
     assert tokenizer.set_token == tokenizer_load.set_token
 
 
+def test_tokenizer_io_filter():
+    text = ["犬を飼っています", "猫を飼っています"]
+    tokenizer = Tokenizer()
+    tokenizer.filter_by_pos(["名詞"])
+    tokenizer.fit_on_texts(text)
+
+    # prepare
+    tmp_dir = ".pytest_cache/"
+    if not os.path.exists(tmp_dir):
+        os.mkdir(tmp_dir)
+    output_file = os.path.join(tmp_dir, "test_tokenizer_filter.txt")
+
+    assert tokenizer.text_to_sequence("猫を飼っています") == [7]
+    assert tokenizer.sequence_to_text([7, 2, 3, 4, 5, 6]) == "猫を飼っています"
+
+    # save after filtering (only include noun)
+    tokenizer.save_as_text(output_file, filter=True)
+
+    # load
+    tokenizer_load = Tokenizer()
+    tokenizer_load.load_from_text(output_file)
+
+    assert tokenizer_load.text_to_sequence("猫を飼っています") == [7, -1, -1, -1, -1, -1]
+    assert tokenizer_load.sequence_to_text([7, 2]) == "猫UNK"
+    assert tokenizer_load.sequence_to_text([7, 1]) == "猫犬"
+
+
 def test_tokenizer_io_pkl():
     text = ["犬を飼っています", "猫を飼っています"]
     tokenizer = Tokenizer()
