@@ -1,3 +1,4 @@
+import pickle
 from collections import defaultdict
 from collections import namedtuple
 
@@ -97,10 +98,30 @@ class Tokenizer():
         with open(filename) as f:
             for line in f:
                 l = line.strip().split("\t")
-                w_id = int(l[0])
-                w = self.node(l[1], l[2])
+                self._load_line(l)
 
-                self.token2id[w] = w_id
-                self.id2token[w_id] = w
-                self.word_index += 1
-                self.set_token.add(w)
+    def save_as_pkl(self, filename, filter=False):
+        with open(filename, "wb") as f:
+            output = []
+            for w, w_id in self.token2id.items():
+                if w_id == 0:
+                    continue
+                if filter and not self.filter_text(w):
+                    continue
+                output.append([str(w_id), w.surface, w.feature])
+            pickle.dump(output, f)
+
+    def load_from_pkl(self, filename):
+        with open(filename, "rb") as f:
+            load_list = pickle.load(f)
+            for l in load_list:
+                self._load_line(l)
+
+    def _load_line(self, l):
+        w_id = int(l[0])
+        w = self.node(l[1], l[2])
+
+        self.token2id[w] = w_id
+        self.id2token[w_id] = w
+        self.word_index += 1
+        self.set_token.add(w)

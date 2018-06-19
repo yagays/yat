@@ -105,6 +105,35 @@ def test_tokenizer_io():
     assert tokenizer_load.text_to_sequence("猫を飼っています") == [7, 2, 3, 4, 5, 6]
     assert tokenizer_load.sequence_to_text([7, 2, 3, 4, 5, 6]) == "猫を飼っています"
 
+    # equivalent to the original class
+    assert tokenizer.token2id == tokenizer_load.token2id
+    assert tokenizer.id2token == tokenizer_load.id2token
+    assert tokenizer.word_index == tokenizer_load.word_index
+    assert tokenizer.set_token == tokenizer_load.set_token
+
+
+def test_tokenizer_io_pkl():
+    text = ["犬を飼っています", "猫を飼っています"]
+    tokenizer = Tokenizer()
+    tokenizer.fit_on_texts(text)
+
+    tmp_dir = ".pytest_cache/"
+    if not os.path.exists(tmp_dir):
+        os.mkdir(tmp_dir)
+    output_file = os.path.join(tmp_dir, "test_tokenizer.pkl")
+
+    # save
+    tokenizer.save_as_pkl(output_file)
+    # load
+    tokenizer_load = Tokenizer()
+    tokenizer_load.load_from_pkl(output_file)
+
+    # equivalent to the original class
+    assert tokenizer.token2id == tokenizer_load.token2id
+    assert tokenizer.id2token == tokenizer_load.id2token
+    assert tokenizer.word_index == tokenizer_load.word_index
+    assert tokenizer.set_token == tokenizer_load.set_token
+
 
 if __name__ == "__main__":
     pytest.main([__file__])
