@@ -134,6 +134,15 @@ def test_tokenizer_io_filter():
     tokenizer_load = Tokenizer()
     tokenizer_load.load_from_text(output_file)
 
+    assert len(tokenizer.token2id) == 8
+    assert len(tokenizer_load.token2id) == 3  # only blank_word, "犬" and "猫"
+    assert len(tokenizer.id2token) == 8
+    assert len(tokenizer_load.id2token) == 3
+    assert tokenizer.word_index == 7
+    assert tokenizer_load.word_index == 2
+    assert len(tokenizer.set_token) == 8
+    assert len(tokenizer_load.set_token) == 3
+
     assert tokenizer_load.text_to_sequence("猫を飼っています") == [7, -1, -1, -1, -1, -1]
     assert tokenizer_load.sequence_to_text([7, 2]) == "猫UNK"
     assert tokenizer_load.sequence_to_text([7, 1]) == "猫犬"
